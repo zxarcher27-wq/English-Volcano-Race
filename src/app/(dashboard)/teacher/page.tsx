@@ -59,23 +59,18 @@ export default function TeacherDashboard() {
     setError("");
 
     try {
-      // Read file contents
-      const fileContents: string[] = [];
+      // Send files as FormData for server-side parsing
+      const formData = new FormData();
       for (const file of uploadedFiles) {
-        const text = await file.text();
-        fileContents.push(text);
+        formData.append("files", file);
       }
 
       setAnalyzeProgress(20);
 
-      // Call AI analysis API
+      // Call AI analysis API with FormData
       const response = await fetch("/api/ai/analyze", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          texts: fileContents,
-          fileNames: uploadedFiles.map((f) => f.name),
-        }),
+        body: formData,
       });
 
       setAnalyzeProgress(60);
