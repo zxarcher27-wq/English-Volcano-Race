@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import QuestionCard from "@/components/game/QuestionCard";
 import VolcanoLeaderboard from "@/components/game/VolcanoLeaderboard";
@@ -80,7 +80,7 @@ type GamePhase =
   | "leaderboard"
   | "final_results";
 
-export default function PlayGamePage() {
+function PlayGameContent() {
   const searchParams = useSearchParams();
   const roomCode = searchParams.get("room") || "DEMO";
   const teamName = searchParams.get("team") || "Team Alpha";
@@ -435,5 +435,13 @@ export default function PlayGamePage() {
         )}
       </main>
     </div>
+  );
+}
+
+export default function PlayGamePage() {
+  return (
+    <Suspense fallback={<div className="volcano-bg min-h-screen flex items-center justify-center"><div className="text-4xl animate-float">🌋</div></div>}>
+      <PlayGameContent />
+    </Suspense>
   );
 }
